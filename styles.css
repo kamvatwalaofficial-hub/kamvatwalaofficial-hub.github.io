@@ -734,3 +734,59 @@ main h2::after {
   margin-bottom: 1rem;
 }
 .notfound h1 { font-size: var(--step-3); }
+
+/* ------------------------------------------------------------ skills: icons and proficiency labels */
+.skill-icon { width: 1.05em; height: 1.05em; margin-right: 0.45rem; vertical-align: -0.15em; color: var(--scan); flex: none; }
+.skill-list--detailed .skill .skill-meta { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+.skill-level { color: var(--signal); font-weight: 500; }
+
+/* ------------------------------------------------------------ work: richer project rows */
+.row--rich h3 { grid-row: auto; }
+.row-body { display: grid; gap: 0.75rem; min-width: 0; }
+.row-body > p { margin: 0; }
+.row-award {
+  display: grid; gap: 0.15rem; justify-self: start; padding: 0.6rem 0.9rem; border-radius: 0.6rem;
+  border: 1px solid rgba(242, 179, 61, 0.45); background: rgba(242, 179, 61, 0.08);
+}
+.row-award-title { font-family: var(--display); font-weight: 800; color: var(--signal); }
+.row-award-meta { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); }
+.row-award--provincial { border-color: rgba(79, 209, 197, 0.45); background: rgba(79, 209, 197, 0.08); }
+.row-award--provincial .row-award-title { color: var(--scan); }
+.row-more { padding: 0; }
+.row-more > summary { display: inline-block; }
+
+/* ------------------------------------------------------------ smart health architecture diagram */
+.hdiagram { margin: 1.25rem 0 0; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.hdiagram figcaption { font-family: var(--display); font-weight: 800; font-size: var(--step-1); color: var(--ink); margin-bottom: 0.75rem; }
+.hdiagram-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin: 0.75rem 0 0.6rem; }
+.hflow { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.6rem; }
+.hnode {
+  position: relative; display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; align-items: center;
+  padding: 0.7rem 0.8rem; border-radius: 0.6rem; background: var(--surface-2); border: 1px solid var(--line);
+}
+.hnode-icon { grid-row: span 2; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 0.55rem;
+  color: var(--scan); background: rgba(79, 209, 197, 0.1); border: 1px solid rgba(79, 209, 197, 0.35); }
+.hnode-icon svg { width: 1.35rem; height: 1.35rem; }
+.hnode-name { font-weight: 700; color: var(--ink); line-height: 1.25; }
+.hnode-note { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.35; }
+.hnode--end { border-color: rgba(79, 209, 197, 0.55); }
+/* arrows between steps: downwards on small screens */
+.hnode + .hnode::before {
+  content: "\2193"; position: absolute; left: 1.95rem; top: -1.45rem; color: var(--scan); font-weight: 700; line-height: 1.2rem;
+}
+.hflow--support .hnode { border-style: dashed; }
+.hflow--support .hnode-icon { color: var(--signal); background: rgba(242, 179, 61, 0.1); border-color: rgba(242, 179, 61, 0.4); }
+.hflow--support .hnode--end .hnode-icon { color: var(--scan); background: rgba(79, 209, 197, 0.1); border-color: rgba(79, 209, 197, 0.35); }
+.hflow--support .hnode + .hnode::before { color: var(--signal); }
+.hdiagram-note { margin: 1rem 0 0; font-size: var(--step--1); color: var(--ink-soft); font-style: italic; }
+
+.hdiagram { container-type: inline-size; }
+.hdiagram-grid { display: grid; gap: 0.5rem 1.5rem; }
+.hflow-col { min-width: 0; }
+@container (min-width: 36rem) {
+  .hdiagram-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+@media (max-width: 52rem) {
+  .row--rich { grid-template-columns: 1fr; }
+}
