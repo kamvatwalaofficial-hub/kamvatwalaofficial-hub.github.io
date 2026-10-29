@@ -1,0 +1,54 @@
+name: Image metadata check
+
+# Fails the run if any image in the repository contains GPS location data
+# or camera/device identifiers (make, model, serial numbers).
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Scan images for GPS and camera metadata
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ExifTool
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libimage-exiftool-perl
+
+      - name: Scan images
+        run: |
+          set -euo pipefail
+
+          CONDITION='$GPSLatitude or $GPSLongitude or $GPSPosition or $GPSAltitude
+            or $Make or $Model or $SerialNumber or $BodySerialNumber
+            or $LensSerialNumber or $CameraSerialNumber or $InternalSerialNumber'
+
+          FLAGGED=$(exiftool -q -q -r -i .git \
+            -ext jpg -ext jpeg -ext png -ext webp -ext heic -ext heif \
+            -ext tif -ext tiff -ext avif -ext gif \
+            -if "$CONDITION" \
+            -p '$Directory/$FileName' . || true)
+
+          if [ -n "$FLAGGED" ]; then
+            echo "::error::Images with GPS or camera metadata were found."
+            while IFS= read -r file; do
+              echo "::error file=${file#./}::Contains GPS or camera metadata"
+              exiftool -s -G1 -GPSLatitude -GPSLongitude -GPSPosition -Make -Model \
+                -SerialNumber -BodySerialNumber -LensSerialNumber \
+                -CameraSerialNumber -InternalSerialNumber "$file"
+            done <<< "$FLAGGED"
+            echo
+            echo "Strip it locally, then commit the cleaned files:"
+            echo "  exiftool -all= -tagsfromfile @ -icc_profile -overwrite_original <image>"
+            exit 1
+          fi
+
+          echo "No GPS or camera metadata found in any image."
